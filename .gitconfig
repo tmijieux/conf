@@ -1,0 +1,17 @@
+
+[user]
+	name = Thomas Mijieux
+	email = thomas.mijieux@aum.bio
+
+[merge]
+	ff = only
+
+[alias]
+	br = branch
+	bra = branch --all
+	st = status
+	ci = commit
+	co = checkout
+	df = diff
+	dfs = diff --staged
+
