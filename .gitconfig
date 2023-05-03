@@ -5,6 +5,8 @@
 
 [merge]
 	ff = only
+[pull]
+	ff = only
 
 [alias]
 	br = branch
