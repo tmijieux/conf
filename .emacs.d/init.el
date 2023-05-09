@@ -1,3 +1,15 @@
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8-unix)
+(global-anzu-mode)
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
@@ -11,11 +23,13 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
 (setq-default c-basic-offset 4)
+(setq-default buffer-file-coding-system 'utf-8-unix)
+(setq-default default-buffer-file-coding-system 'utf-8-unix)
 (setq indent-tabs-mode nil)
 (setq tab-width 8)
 (setq c-basic-offset 4)
 (setq js-indent-level 2)
-(fset 'yes-or-no-p 'y-or-n-p)
+
 
 (setq helm-always-two-windows nil)
 (setq helm-display-buffer-default-height 23)
@@ -40,7 +54,8 @@
     (arglist-close . 0)
     )))
 ;; http://blogs.msdn.com/b/dotnetinterop/archive/2008/04/14/dino-s-emacs-file.aspx
-(c-add-style "csharp"
+(c-add-style
+ "csharp"
  '("Java"
    ;;(c-basic-offset . 2)
    (c-basic-offset . 4)
@@ -111,35 +126,37 @@
        (topmost-intro-cont . 0)
        ))
    ))
-(c-add-style "my-csharp-style"
-  '("csharp"  ; this must be defined elsewhere
-    ;;(c-basic-offset . 2)
-  (c-basic-offset . 4)
-  (c-echo-syntactic-information-p . t)
-  (c-comment-only-line-offset . (0 . 0))
-  (c-offsets-alist . (
-    (c                     . c-lineup-C-comments)
-    (namespace-open        . 0)
-    (namespace-close       . 0)
-    (innamespace           . +)
-    (class-open            . 0)
-    (class-close           . 0)
-    (inclass               . +)
-    (block-open            . -)    ; eg, open a block under a function name or if stmt;
-                                   ; want this to be flush with prev line.
-    (arglist-cont          . 0)
-    (substatement-open     . 0)  ; I think this is for a try {} or if{} or etc. why this is not block open, I don't know!
-    (defun-open            . 0)  ; method defn? (but no!)
-    (defun-block-intro     . +)  ;0 ; block within a function????
-    (inline-open           . 0)  ; eg, opening a function? ??
-    (statement-block-intro . +)  ; unknown what this is
-    (brace-list-open       . 0)  ; list open (like an enum, array initializer)
-    (brace-list-intro      . +)  ; first item in the list
-    (brace-list-entry      . 0)  ; subsequent items in the list
-    (brace-list-close      . 0)  ; list close
-    ;(statement-cont        . (dinoch-csharp-lineup-string-cont +))  ; align long strings
-    ))
-  ))
+(c-add-style
+ "my-csharp-style"
+ '("csharp"  ; this must be defined elsewhere
+   ;;(c-basic-offset . 2)
+   (c-basic-offset . 4)
+   (c-echo-syntactic-information-p . t)
+   (c-comment-only-line-offset . (0 . 0))
+   (c-offsets-alist
+    . (
+       (c                     . c-lineup-C-comments)
+       (namespace-open        . 0)
+       (namespace-close       . 0)
+       (innamespace           . +)
+       (class-open            . 0)
+       (class-close           . 0)
+       (inclass               . +)
+       (block-open            . -)    ; eg, open a block under a function name or if stmt;
+                                        ; want this to be flush with prev line.
+       (arglist-cont          . 0)
+       (substatement-open     . 0)  ; I think this is for a try {} or if{} or etc. why this is not block open, I don't know!
+       (defun-open            . 0)  ; method defn? (but no!)
+       (defun-block-intro     . +)  ;0 ; block within a function????
+       (inline-open           . 0)  ; eg, opening a function? ??
+       (statement-block-intro . +)  ; unknown what this is
+       (brace-list-open       . 0)  ; list open (like an enum, array initializer)
+       (brace-list-intro      . +)  ; first item in the list
+       (brace-list-entry      . 0)  ; subsequent items in the list
+       (brace-list-close      . 0)  ; list close
+                                        ;(statement-cont        . (dinoch-csharp-lineup-string-cont +))  ; align long strings
+       ))
+   ))
 
 (defun set-my-style ()
   (c-set-style "my-style")
@@ -153,13 +170,11 @@
 
 (defun my-prog-mode ()
   (show-paren-mode)
-  (anzu-mode)
-  ;;  (company-mode)
-  (helm-mode)
+  ;; (linum-mode)
+  ;; (company-mode)
   (ggtags-mode)
-  (nlinum-mode)
   (yas-global-mode 1)
-  ;;(helm-gtags-mode 1)
+  (helm-gtags-mode)
   )
 (defun my-web-mode-hook ()
   "hooks for web mode"
@@ -223,10 +238,10 @@
 (push '("\\.cmake\\'" . cmake-mode) auto-mode-alist)
 (push '("CMakeLists\\.txt\\'" . cmake-mode) auto-mode-alist)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages '((shell . t)) )
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages '((sh . t)) )
 
-(setq ob-async-no-async-languages-alist '("ipython" "shell"))
+;; (setq ob-async-no-async-languages-alist '("ipython" "shell"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -236,18 +251,33 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(column-number-mode t)
- '(custom-enabled-themes (quote (tango-dark)))
+ '(css-indent-offset 2)
+ '(custom-enabled-themes '(tango-dark))
  '(helm-always-two-windows nil)
  '(helm-display-buffer-default-height 23)
  '(org-confirm-babel-evaluate nil)
  '(package-selected-packages
-   (quote
-    (omnisharp ob-async csharp-mode web-mode yaml-mode lua-mode yasnippet company cmake-mode ggtags helm-gtags anzu helm nlinum)))
+   '(prettier editorconfig tide typescript-mode js2-mode coffee-mode anaconda-mode yasnippet-snippets omnisharp ob-async csharp-mode web-mode yaml-mode lua-mode yasnippet company cmake-mode ggtags helm-gtags anzu helm nlinum))
+ '(python-indent-offset 4)
  '(show-paren-mode t)
- '(show-trailing-whitespace t))
+ '(show-trailing-whitespace t)
+ '(typescript-indent-level 2)
+ '(use-short-answers t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 113 :width normal)))))
+(setq create-lockfiles nil)
+(global-nlinum-mode)
+;;(defun initialize-nlinum (&optional frame)
+;;  (require 'nlinum)
+;;  (add-hook 'prog-mode-hook 'initialize-nlinum))
+;;
+;;(when (daemonp)
+;;  (add-hook 'window-setup-hook 'initialize-nlinum)
+;;  (defadvice make-frame (around toggle-nlinum-mode compile activate)
+;;    (nlinum-mode -1) ad-do-it (nlinum-mode 1)))
+;;
+(defalias 'yes-or-no-p 'y-or-n-p)
